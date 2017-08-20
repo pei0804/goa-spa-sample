@@ -35,5 +35,9 @@ var _ = Resource("schema", func() {
 })
 
 var _ = Resource("ui", func() {
-	Files("/*filepath", "assets/")
+	Files("/favicon.ico", "front/build/favicon.ico")
+	Files("/static/*filepath", "front/build/static")
+	Files("/manifest.json", "front/build/manifest.json")
+	Files("*", "front/build/index.html")
+	Files("/", "front/build/index.html")
 })
