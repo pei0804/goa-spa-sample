@@ -3,13 +3,15 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
 	"github.com/pei0804/goa-spa-sample/app"
 	"github.com/pei0804/goa-spa-sample/controller"
 )
 
-func main() {
+func init() {
 	// Create service
 	service := goa.New("files")
 
@@ -33,8 +35,6 @@ func main() {
 	app.MountUIController(service, c4)
 
 	// Start service
-	if err := service.ListenAndServe(":8080"); err != nil {
-		service.LogError("startup", "err", err)
-	}
+	http.HandleFunc("/", service.Mux.ServeHTTP)
 
 }
