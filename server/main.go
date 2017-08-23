@@ -1,6 +1,6 @@
 //go:generate goagen bootstrap -d github.com/pei0804/goa-spa-sample/design
 
-package main
+package server
 
 import (
 	"net/http"
