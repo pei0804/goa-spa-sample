@@ -26,14 +26,7 @@ bk-build:
       name: test
       code: goapp test -v ./...
 
-bk-deploy:
-  box:
-    id: michilu/docker-goapp
-  steps:
-  - michilu/go-appengine-deploy:
-      token: $APP_ENGINE_TOKEN
-
-ft-deploy:
+deploy:
   box:
     id: michilu/docker-goapp
   steps:
