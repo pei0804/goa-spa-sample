@@ -36,5 +36,8 @@ deploy:
   box:
     id: michilu/docker-goapp
   steps:
-  - michilu/go-appengine-deploy:
+    - script:
+        name: deploy info
+        code: find .
+    - michilu/go-appengine-deploy:
       token: $APP_ENGINE_TOKEN
