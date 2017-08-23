@@ -26,6 +26,9 @@ bk-build:
       name: test
       code: goapp test -v ./...
     - script:
+      name: front bindata
+      code: make bindata
+    - script:
       name: build
       code: goapp build ./server
 
