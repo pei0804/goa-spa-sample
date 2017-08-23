@@ -5,12 +5,12 @@ package main
 import (
 	"net/http"
 
+	"github.com/elazarl/go-bindata-assetfs"
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
 	"github.com/pei0804/goa-spa-sample/app"
 	"github.com/pei0804/goa-spa-sample/controller"
 	"github.com/pei0804/goa-spa-sample/front"
-	"github.com/elazarl/go-bindata-assetfs"
 )
 
 func init() {

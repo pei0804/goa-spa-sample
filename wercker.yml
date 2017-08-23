@@ -1,17 +1,41 @@
-build:
+ft-build:
+  box:
+    id: node
   steps:
-  - keima/go-appengine-util:
-      cwd: path/to/gocode/
-      method: get
-  - keima/go-appengine-util:
-      cwd: path/to/gocode/
-      method: test
-  - keima/go-appengine-util:
-      cwd: path/to/gocode/
-      method: build
-deploy:
+    - script:
+      name: env check
+      code: env
+    - npm-install:
+      cwd: ./front
+    - script:
+      cwd: ./front
+      name: lint
+      code: npm run lint
+
+bk-build:
+  box:
+    id: michilu/docker-goapp
   steps:
-  - keima/go-appengine-util:
-      method: deploy
-      cwd: path/to/appyaml/
-      token:  $APP_ENGINE_TOKEN
+    - script:
+      name: env check
+      code: env
+    - script:
+      name: lint
+      code: make lint
+    - script:
+      name: test
+      code: goapp test -v ./...
+
+bk-deploy:
+  box:
+    id: michilu/docker-goapp
+  steps:
+  - michilu/go-appengine-deploy:
+      token: $APP_ENGINE_TOKEN
+
+ft-deploy:
+  box:
+    id: michilu/docker-goapp
+  steps:
+  - michilu/go-appengine-deploy:
+      token: $APP_ENGINE_TOKEN
