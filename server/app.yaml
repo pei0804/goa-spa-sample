@@ -5,3 +5,11 @@ api_version: go1.8
 handlers:
 - url: /.*
   script: _go_app
+skip_files:
+- front/node_modules/.*$
+- front/public/.*$
+- front/src/.*$
+- front/.eslintrc.json
+- front/.gitignore
+- front/.package.json
+- front/README.md

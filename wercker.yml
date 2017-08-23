@@ -1,0 +1,17 @@
+build:
+  steps:
+  - keima/go-appengine-util:
+      cwd: path/to/gocode/
+      method: get
+  - keima/go-appengine-util:
+      cwd: path/to/gocode/
+      method: test
+  - keima/go-appengine-util:
+      cwd: path/to/gocode/
+      method: build
+deploy:
+  steps:
+  - keima/go-appengine-util:
+      method: deploy
+      cwd: path/to/appyaml/
+      token:  $APP_ENGINE_TOKEN

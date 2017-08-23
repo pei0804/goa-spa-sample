@@ -29,9 +29,11 @@ generate:
 	@goagen app     -d $(REPO)/design
 	@goagen swagger -d $(REPO)/design
 	@goagen client -d $(REPO)/design
-	@goagen js -d $(REPO)/design
-	@goagen schema -d $(REPO)/design
-	@go build -o build
+
+devDepend:
+	go get -u github.com/alecthomas/gometalinter/...
+	go get -u github.com/jteeuwen/go-bindata/...
+	gometalinter --install --update
 
 swaggerUI:
 	@open http://localhost:8080/swagger/index.html
@@ -45,3 +47,20 @@ run:
 
 build:
 	@go build -o build
+
+lint:
+	@if [ "`gometalinter ./... --config=lint_config.json | tee /dev/stderr`" ]; then \
+		echo "^ - lint err" && echo && exit 1; \
+	fi
+
+bindata:
+	go-bindata -ignore bindata.go -pkg front -o front/bindata.go ./front/build/...
+
+local:
+	goapp serve ./server
+
+staging-deploy:
+	goapp deploy -application enows-staging ./server
+
+staging-rollback:
+	appcfg.py rollback ./server -A enows-staging
