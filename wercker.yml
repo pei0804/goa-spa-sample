@@ -25,6 +25,9 @@ bk-build:
     - script:
       name: test
       code: goapp test -v ./...
+    - script:
+      name: build
+      code: goapp build ./server
 
 deploy:
   box:
