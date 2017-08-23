@@ -10,12 +10,7 @@ install:
 	cd front && npm install && npm build
 	$(MAKE) local
 
-##### Convenience targets ######
-
-REPO:=github.com/pei0804/goa-spa-sample
-
-init: depend bootstrap
-gen: clean generate
+##### depend #####
 
 depend:
 	go get -u github.com/goadesign/goa
@@ -23,13 +18,25 @@ depend:
 	go get -u github.com/jteeuwen/go-bindata/...
 	go get -u github.com/Masterminds/glide
 
+devDepend:
+	go get -u github.com/alecthomas/gometalinter/...
+	gometalinter --install --update
+
 vendoring:
 	rm -rf ./vendor
 	glide install
 
-devDepend:
-	go get -u github.com/alecthomas/gometalinter/...
-	gometalinter --install --update
+deps:
+	$(MAKE) depend
+	$(MAKE) devDepend
+	$(MAKE) vendoring
+
+##### goa ######
+
+REPO:=github.com/pei0804/goa-spa-sample
+
+init: depend bootstrap
+gen: clean generate
 
 bootstrap:
 	goagen bootstrap -d $(REPO)/design
