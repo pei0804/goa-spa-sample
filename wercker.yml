@@ -1,46 +1,106 @@
+box: pei0804/gae-go-deploy
 ft-build:
-  box:
-    id: node
   steps:
     - script:
       name: env check
       code: env
-    - npm-install:
-      cwd: ./front
+
     - script:
-      cwd: ./front
+      name: get code
+      cwd: ./
+      code: goapp get -v github.com/pei0804/goa-spa-sample
+
+    - script:
+      name: deploy info
+      cwd: ./src/github.com/pei0804/goa-spa-sample/
+      code: find .
+
+    - npm-install:
+      cwd: ./src/github.com/pei0804/goa-spa-sample/front
+
+    - script:
+      cwd: ./src/github.com/pei0804/goa-spa-sample/front
       name: lint
       code: npm run lint
 
+    - script:
+      cwd: ./src/github.com/pei0804/goa-spa-sample/front
+      name: build
+      code: npm run build
+
 bk-build:
-  box:
-    id: michilu/docker-goapp
   steps:
     - script:
       name: env check
       code: env
+
     - script:
       name: depend
-      code: make deps
+      cwd: ./src/github.com/pei0804/goa-spa-sample/
+      code: make depend
+
     - script:
-      name: lint
-      code: make lint
+      name: dev depend
+      cwd: ./src/github.com/pei0804/goa-spa-sample/
+      code: make devDepend
+
     - script:
-      name: test
-      code: goapp test -v ./...
+      name: vendoring
+      cwd: ./src/github.com/pei0804/goa-spa-sample/
+      code: make vendoring
+
+    - script:
+      name: pwd
+      cwd: ./src/github.com/pei0804/goa-spa-sample/
+      code: pwd
+
+    - script:
+      name: deploy info
+      cwd: ./src/github.com/pei0804/goa-spa-sample/
+      code: find .
+
+    - script:
+      name: gen
+      cwd: ./src/github.com/pei0804/goa-spa-sample/
+      code: make gen
+
     - script:
       name: front bindata
+      cwd: ./src/github.com/pei0804/goa-spa-sample/
       code: make bindata
+
+    - script:
+      name: lint
+      cwd: ./src/github.com/pei0804/goa-spa-sample/
+      code: make lint
+
+    - script:
+      name: test
+      cwd: ./src/github.com/pei0804/goa-spa-sample/
+      code: goapp test -v ./...
+
     - script:
       name: build
-      code: goapp build ./server
+      cwd: ./src/github.com/pei0804/goa-spa-sample/
+      code: goapp build -o goa-spa-sample ./server
 
 deploy:
-  box:
-    id: michilu/docker-goapp
   steps:
     - script:
-        name: deploy info
-        code: find .
+      name: deploy info
+      cwd: ./src/github.com/pei0804/goa-spa-sample/
+      code: find .
+
+    - install-packages:
+      packages: rsync
+
+    - script:
+      name: copy to output directory
+      code: rsync -avz ./src/github.com/pei0804/goa-spa-sample/ $WERCKER_OUTPUT_DIR
+
+    - script:
+      name: deploy info
+      code: find .
+
     - michilu/go-appengine-deploy:
       token: $APP_ENGINE_TOKEN

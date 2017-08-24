@@ -19,17 +19,12 @@ depend:
 	go get -u github.com/Masterminds/glide
 
 devDepend:
-	go get -u github.com/alecthomas/gometalinter/...
-	gometalinter --install --update
+	goapp get -u github.com/alecthomas/gometalinter
+	gometalinter --install --update --force
 
 vendoring:
 	rm -rf ./vendor
 	glide install
-
-deps:
-	$(MAKE) depend
-	$(MAKE) devDepend
-	$(MAKE) vendoring
 
 ##### goa ######
 
@@ -58,7 +53,6 @@ generate:
 	goagen swagger -d $(REPO)/design
 	goagen client -d $(REPO)/design
 
-
 swaggerUI:
 	open http://localhost:8080/swagger/index.html
 
@@ -66,7 +60,7 @@ run:
 	go run main.go
 
 build:
-	go build -o build
+	goapp build -o goa-spa-sample ./server
 
 lint:
 	@if [ "`gometalinter ./... --config=lint_config.json | tee /dev/stderr`" ]; then \
@@ -74,6 +68,7 @@ lint:
 	fi
 
 bindata:
+	rm -f ./front/bindata.go
 	go-bindata -ignore bindata.go -pkg front -o front/bindata.go ./front/build/...
 
 local:
@@ -84,3 +79,11 @@ staging-deploy:
 
 staging-rollback:
 	appcfg.py rollback ./server -A enows-staging
+
+##### etc ######
+
+preDeploy:
+	$(MAKE) gen
+	$(MAKE) bindata
+	cd front && npm build
+	$(MAKE) staging-deploy

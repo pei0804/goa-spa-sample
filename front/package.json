@@ -21,7 +21,7 @@
   "scripts": {
     "lint": "node_modules/eslint/bin/eslint.js ./src",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "rm -rf build && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }
